@@ -40,19 +40,18 @@ const struct {
 } _supported_devices[] = {
     // Sorted in numerical order
     // Fujitsu
-    {0x04, 0x0101, 2 * 1024UL},   // MB85RS16
-    {0x04, 0x0302, 8 * 1024UL},   // MB85RS64V
-    {0x04, 0x2303, 8 * 1024UL},   // MB85RS64T
-    {0x04, 0x2503, 32 * 1024UL},  // MB85RS256TY
-    {0x04, 0x4803, 256 * 1024UL}, // MB85RS2MTA
-    {0x04, 0x4903, 512 * 1024UL}, // MB85RS4MT
+    {0x04, 0x0101, 2 * 1024},   // MB85RS16
+    {0x04, 0x0302, 8 * 1024},   // MB85RS64V
+    {0x04, 0x2303, 8 * 1024},   // MB85RS64T
+    {0x04, 0x4803, 256 * 1024}, // MB85RS2MTA
+    {0x04, 0x4903, 512 * 1024}, // MB85RS4MT
 
     // Cypress
-    {0x7F, 0x7F7f, 32 * 1024UL}, // FM25V02
-                                 // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
+    {0x7F, 0x7F7f, 32 * 1024}, // FM25V02
+                               // (manu = 7F7F7F7F7F7FC2, device = 0x2200)
 
     // Lapis
-    {0xAE, 0x8305, 8 * 1024UL} // MR45V064B
+    {0xAE, 0x8305, 8 * 1024} // MR45V064B
 };
 
 /*!
@@ -85,17 +84,14 @@ static uint32_t check_supported_device(uint8_t manufID, uint16_t prodID) {
  *          Required chip select pin number
  *  @param  *theSPI
  *          SPI interface object, defaults to &SPI
- *  @param  freq
- *          The SPI clock frequency to use, defaults to 1MHz
  */
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI,
-                                     uint32_t freq) {
+Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI) {
   if (spi_dev) {
     delete spi_dev;
   }
 
-  spi_dev = new Adafruit_SPIDevice(cs, freq, SPI_BITORDER_MSBFIRST, SPI_MODE0,
-                                   theSPI);
+  spi_dev = new Adafruit_SPIDevice(cs, 1000000, SPI_BITORDER_MSBFIRST,
+                                   SPI_MODE0, theSPI);
 }
 
 /*!
@@ -109,15 +105,15 @@ Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t cs, SPIClass *theSPI,
  *  @param  cs
  *          CS pin
  */
-Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
-                                     int8_t cs) {
-  if (spi_dev) {
-    delete spi_dev;
-  }
-
-  spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi, 1000000,
-                                   SPI_BITORDER_MSBFIRST, SPI_MODE0);
-}
+// Adafruit_FRAM_SPI::Adafruit_FRAM_SPI(int8_t clk, int8_t miso, int8_t mosi,
+//                                      int8_t cs) {
+//   if (spi_dev) {
+//     delete spi_dev;
+//   }
+// 
+//   spi_dev = new Adafruit_SPIDevice(cs, clk, miso, mosi, 1000000,
+//                                    SPI_BITORDER_MSBFIRST, SPI_MODE0);
+// }
 
 /*!
  *  @brief  Initializes SPI and configures the chip (call this function before
